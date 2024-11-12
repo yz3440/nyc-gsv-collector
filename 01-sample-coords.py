@@ -15,7 +15,7 @@ SAMPLE_INTERVAL_DEGREE = SAMPLE_INTERVAL_METER / 111000
 PRINT_INTERVAL = 1000  # print every 1000 points
 DB_PATH = "gsv.db"
 
-geojson_path = "geojson/Borough Boundaries.geojson"
+geojson_path = "geojson/sf.geojson"
 
 gdf = gpd.read_file(geojson_path)
 print(gdf.head())
@@ -24,7 +24,7 @@ feature_dict = {}
 for i, feature in gdf.iterrows():
     # make feature a new gdf
     feature_gdf = gpd.GeoDataFrame([feature])
-    feature_dict[feature["boro_name"]] = feature_gdf
+    feature_dict[feature["neighborhood"]] = feature_gdf
 
 print("Feature dict: ", feature_dict.keys())
 
