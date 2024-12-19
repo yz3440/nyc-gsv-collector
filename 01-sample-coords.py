@@ -15,18 +15,46 @@ SAMPLE_INTERVAL_DEGREE = SAMPLE_INTERVAL_METER / 111000
 PRINT_INTERVAL = 1000  # print every 1000 points
 DB_PATH = "gsv.db"
 
-geojson_path = "geojson/Borough Boundaries.geojson"
+geojson_path = "geojson/hk.geojson"
 
 gdf = gpd.read_file(geojson_path)
 print(gdf.head())
 
 feature_dict = {}
+
+hk_urban_district = [
+    # hong kong island
+    "Central and Western",
+    "Eastern",
+    "Southern",
+    "Wan Chai",
+    # kowloon
+    "Yau Tsim Mong",
+    "Sham Shui Po",
+    "Kowloon City",
+    "Kwun Tong",
+    "Wong Tai Sin",
+    # new territories
+    # ignoring new territories for now
+    # "North",
+    # "Sai Kung",
+    # "Sha Tin",
+    # "Tai Po",
+    # "Tsuen Wan",
+    # "Tuen Mun",
+    # "Yuen Long",
+]
+
 for i, feature in gdf.iterrows():
     # make feature a new gdf
     feature_gdf = gpd.GeoDataFrame([feature])
-    feature_dict[feature["boro_name"]] = feature_gdf
+    if feature["name"] in hk_urban_district:
+        feature_dict[feature["name"]] = feature_gdf
+
 
 print("Feature dict: ", feature_dict.keys())
+
+input("Press Enter to continue...")
 
 
 def create_point_grid(bounds, interval):
