@@ -1,14 +1,14 @@
-# NYC Street View Data Collector
+# London Street View Data Collector
 
-A Python-based tool for collecting and analyzing Google Street View panorama data across New York City boroughs. You can modify the script to collect data from other areas.
+A Python-based tool for collecting and analyzing Google Street View panorama data across London postcodes. You can modify the script to collect data from other areas.
 
 ## Overview
 
-This project samples coordinates throughout NYC boroughs and collects associated Google Street View panorama data. It uses a multi-threaded approach to efficiently gather panorama metadata including location, date, and copyright information.
+This project samples coordinates throughout London postcode districts and collects associated Google Street View panorama data. It uses a multi-threaded approach to efficiently gather panorama metadata including location, date, and copyright information.
 
 ## Features
 
-- Generates coordinate grid points within NYC borough boundaries
+- Generates coordinate grid points within London postcode boundaries
 - Searches for Street View panoramas near sampled coordinates
 - Collects panorama metadata (date, copyright, location, etc.)
 - Multi-threaded processing for improved performance
@@ -37,7 +37,7 @@ All data is stored in a local SQLite database named `gsv.db`. This database is c
 python 01-sample-coordinates.py
 ```
 
-This script samples coordinates throughout NYC boroughs and saves them to a SQLite database. It uses a grid of points with a specified spacing (by default `5 meters`, but can be adjusted).
+This script samples coordinates throughout London postcode districts and saves them to a SQLite database. It uses a grid of points with a specified spacing (by default `5 meters`, but can be adjusted).
 
 ### Search Panoramas near Coordinates
 
@@ -77,4 +77,4 @@ This project uses the following open-source packages:
 
 For full license texts of dependencies, please see their respective repositories.
 
-The NYC boroughs geojson data in `geojson/Borough Boundaries.geojson` is from [NYC Open Data](https://data.cityofnewyork.us/City-Government/Borough-Boundaries/tqmj-j8zm).
+The London postcodes GeoJSON data in `geojson/Borough Boundaries.geojson` is from [sjwhitworth/london_geojson](https://github.com/sjwhitworth/london_geojson/blob/master/london_postcodes.json).

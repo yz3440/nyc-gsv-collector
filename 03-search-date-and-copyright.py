@@ -86,7 +86,12 @@ def get_panoramas_without_date_and_copyright(batch_size: int) -> list[str]:
 def search_and_update(pano_id):
 
     print(f"Searching for panorama {pano_id}")
-    metadata = streetview.get_panorama_meta(pano_id, GOOGLE_MAP_API_KEY)
+    
+    try:
+        metadata = streetview.get_panorama_meta(pano_id, GOOGLE_MAP_API_KEY)
+    except Exception as e:
+        print(f"API error for {pano_id}: {e}")
+        return
 
     if metadata is None or (metadata.date is None and metadata.copyright is None):
         print("No meta found for %s" % pano_id)
@@ -115,7 +120,7 @@ def run_batch_in_parallel():
     progress = 0
     begin_time = time.time()
     last_progress_time = time.time()
-    with concurrent.futures.ThreadPoolExecutor(max_workers=72) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=16) as executor:
         futures = {
             executor.submit(search_and_update, pano_id): pano_id
             for pano_id in panoramas
@@ -130,7 +135,7 @@ def run_batch_in_parallel():
                 print(e)
             progress += 1
             last_duration = time.time() - last_progress_time
-            last_speed = progress / (time.time() - last_progress_time)
+            last_speed = 1 / last_duration
             last_progress_time = time.time()
             total_duration = time.time() - begin_time
             total_speed = progress / total_duration

@@ -8,14 +8,14 @@ import sqlite3
 
 # allegedly the Google Street View API will return the nearest panorama within 50 meters radius
 # but I'm sampling every 5 meters, because I've seen missing panoramas in the past
-SAMPLE_INTERVAL_METER = 5
+SAMPLE_INTERVAL_METER = 20
 # 1 degree is approximately 111000 meters
 SAMPLE_INTERVAL_DEGREE = SAMPLE_INTERVAL_METER / 111000
 
 PRINT_INTERVAL = 1000  # print every 1000 points
 DB_PATH = "gsv.db"
 
-geojson_path = "geojson/Borough Boundaries.geojson"
+geojson_path = "geojson/london_by_postcode.geojson"
 
 gdf = gpd.read_file(geojson_path)
 print(gdf.head())
@@ -24,7 +24,7 @@ feature_dict = {}
 for i, feature in gdf.iterrows():
     # make feature a new gdf
     feature_gdf = gpd.GeoDataFrame([feature])
-    feature_dict[feature["boro_name"]] = feature_gdf
+    feature_dict[feature["Name"]] = feature_gdf
 
 print("Feature dict: ", feature_dict.keys())
 
@@ -84,9 +84,9 @@ def save_points_to_db(points, label):
     conn.close()
 
 
-for borough in feature_dict.keys():
-    print("Processing borough: ", borough)
-    gdf = feature_dict[borough]
+for postcode_name in feature_dict.keys():
+    print("Processing postcode: ", postcode_name)
+    gdf = feature_dict[postcode_name]
 
     # each borough is a multi-polygon, so we need to explode it into individual polygons
     gdf = gdf.explode(index_parts=True)
@@ -96,7 +96,7 @@ for borough in feature_dict.keys():
 
     # make each individual polygon a new gdf
     for polygon_idx, polygon in enumerate(gdf["geometry"]):
-        process_label = f"{borough} - polygon {polygon_idx}"
+        process_label = f"{postcode_name} - polygon {polygon_idx}"
         print("Processing %s" % process_label)
 
         polygon_gdf = gpd.GeoDataFrame([polygon], columns=["geometry"])
@@ -114,6 +114,6 @@ for borough in feature_dict.keys():
         print(f"Total points in {process_label}: {len(points_in_polygon)}")
         points_in_borough.extend(points_in_polygon)
 
-    print(f"Total points in {borough}: {len(points_in_borough)}")
+    print(f"Total points in {postcode_name}: {len(points_in_borough)}")
     print("Saving points to db")
-    save_points_to_db(points_in_borough, borough)
+    save_points_to_db(points_in_borough, postcode_name)

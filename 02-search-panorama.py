@@ -12,7 +12,7 @@ SEARCH_BATCH_SIZE = 100000
 # and the coords that have no panorama found will not be marked as searched, and will be searched again in the future
 COUNT_NONE_FOUND_AS_SEARCHED = True
 
-WORKERS = 72
+WORKERS = 36
 
 
 ########################################
@@ -147,7 +147,7 @@ def run_batch_in_parallel():
                 print(e)
             progress += 1
             last_duration = time.time() - last_progress_time
-            last_speed = progress / (time.time() - last_progress_time)
+            last_speed = 1 / last_duration
             last_progress_time = time.time()
             total_duration = time.time() - begin_time
             total_speed = progress / total_duration
