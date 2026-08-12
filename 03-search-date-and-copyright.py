@@ -61,7 +61,7 @@ def get_panoramas_without_date_and_copyright(batch_size: int) -> list[str]:
     panoramas = []
 
     cursor = conn.execute(
-        "SELECT * FROM search_panoramas WHERE date IS NULL OR date = '' OR copyright IS NULL OR copyright = '' ORDER BY RANDOM() LIMIT ?",
+        "SELECT * FROM search_panoramas WHERE (date IS NULL OR date = '') AND (copyright IS NULL OR copyright = '') ORDER BY RANDOM() LIMIT ?",
         [batch_size],
     )
 
